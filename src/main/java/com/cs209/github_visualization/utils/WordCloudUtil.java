@@ -1,11 +1,24 @@
 package com.cs209.github_visualization.utils;
 
+import com.kennycason.kumo.CollisionMode;
+import com.kennycason.kumo.LayeredWordCloud;
+import com.kennycason.kumo.WordCloud;
 import com.kennycason.kumo.WordFrequency;
+import com.kennycason.kumo.bg.PixelBoundaryBackground;
+import com.kennycason.kumo.bg.RectangleBackground;
+import com.kennycason.kumo.font.FontWeight;
+import com.kennycason.kumo.font.KumoFont;
+import com.kennycason.kumo.font.scale.LinearFontScalar;
 import com.kennycason.kumo.nlp.FrequencyAnalyzer;
 import com.kennycason.kumo.nlp.tokenizers.ChineseWordTokenizer;
+import com.kennycason.kumo.palette.ColorPalette;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WordCloudUtil {
 
@@ -142,5 +155,33 @@ public class WordCloudUtil {
             output.put(wf.getWord(), wf.getFrequency());
         }
         return output;
+    }
+
+    public static BufferedImage generatePic(Map<String, Integer> freq, int width, int height) {
+        List<WordFrequency> wordFrequencies = new ArrayList<>();
+        for (String key : freq.keySet()) {
+            wordFrequencies.add(new WordFrequency(key, freq.get(key)));
+        }
+        Dimension dimension = new Dimension(width, height);
+        com.kennycason.kumo.WordCloud wordCloud = new com.kennycason.kumo.WordCloud(
+                dimension, CollisionMode.PIXEL_PERFECT
+        );
+        wordCloud.setBackground(new RectangleBackground(dimension));
+        wordCloud.setPadding(2);
+        wordCloud.setColorPalette(new ColorPalette(
+                new Color(0x4ade80),
+                new Color(0xfb923c),
+                new Color(0x22d3ee),
+                new Color(0xfacc15),
+                new Color(0x8b5cf6),
+                new Color(0xec4899),
+                new Color(0x22d3ee),
+                new Color(0xfb7185)
+        ));
+        wordCloud.setBackgroundColor(new Color(0, 0, 0, 0));
+        wordCloud.setFontScalar(new LinearFontScalar(10, 64));
+        wordCloud.setKumoFont(new KumoFont("Arial", FontWeight.BOLD));
+        wordCloud.build(wordFrequencies);
+        return wordCloud.getBufferedImage();
     }
 }

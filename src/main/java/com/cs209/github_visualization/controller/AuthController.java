@@ -30,9 +30,6 @@ public class AuthController {
     @CrossOrigin
     @GetMapping("/oauth/redirect")
     public void getCode(HttpServletResponse resp, String code) throws IOException {
-        System.out.println(clientId);
-        System.out.println(clientSecret);
-        System.out.println(code);
         // fetch bearer token
         RestTemplate template = new RestTemplate();
         String tokenResp = template.getForObject(
@@ -53,8 +50,6 @@ public class AuthController {
                 break;
             }
         }
-        System.out.println(tokenResp);
-        System.out.println(token);
 
         // store token into cookie
         Cookie cookie = new Cookie("github_token", token);
