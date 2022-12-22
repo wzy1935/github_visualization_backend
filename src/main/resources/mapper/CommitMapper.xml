@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.cs209.github_visualization.mapper.CommitMapper">
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(id)
+        from commit
+        where owner = #{owner}
+          and repo = #{repo}
+          and last_updated in (select last_updated from repo where owner=#{owner} and repo=#{repo});
+    </select>
+
+    <select id="getDeveloperCount" resultType="java.lang.Integer">
+        select count(*) from
+            (select distinct developer_id
+             from commit
+             where owner = #{owner}
+               and repo = #{repo}
+               and last_updated in (select last_updated from repo where owner=#{owner} and repo=#{repo})) as cdi;
+    </select>
+
+
+    <select id="getRank" resultType="com.cs209.github_visualization.POJO.RankWrap">
+        select  developer_name developer, count(developer_id) commits,developer_id
+        from commit
+        where owner = #{owner}
+          and repo = #{repo}
+          and last_updated in (select last_updated from repo where owner=#{owner} and repo=#{repo})
+        group by developer_id, developer_name
+        order by count(developer_id) desc
+        limit #{limit};
+    </select>
+
+    <select id="getCountBetween" resultType="java.lang.Integer">
+        (select count(id)
+        from commit
+        where owner =  #{owner}
+        and repo = #{repo}
+          and last_updated in (select last_updated from repo where owner=#{owner} and repo=#{repo})
+        and commit_time > #{from}
+        and  #{to} > commit_time)
+        ;
+    </select>
+
+    <select id="getCommitTime" resultType="java.lang.Long">
+        (select commit_time
+         from commit
+         where owner = #{owner}
+           and repo = #{repo}
+        and last_updated in (select last_updated from repo where owner=#{owner} and repo=#{repo})
+        )
+    </select>
+</mapper>

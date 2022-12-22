@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.cs209.github_visualization.mapper.ReleaseMapper">
+
+    <select id="getCount" resultType="java.lang.Integer">
+        (select count(id)
+         from release
+         where owner = #{owner}
+           and repo = #{repo}
+           and last_updated in (select last_updated from repo where owner=#{owner} and repo=#{repo}));
+    </select>
+
+    <select id="getAll" resultType="com.cs209.github_visualization.POJO.ReleaseJS">
+        (select name, published_at
+         from release
+         where owner = #{owner}
+           and repo = #{repo}
+           and last_updated in (select last_updated from repo where owner=#{owner} and repo=#{repo})
+        order by published_at desc
+         limit #{limit});
+    </select>
+
+
+</mapper>

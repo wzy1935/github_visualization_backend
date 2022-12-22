@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.cs209.github_visualization.mapper.IssueMapper">
+
+    <select id="getIssueCount" resultType="com.cs209.github_visualization.POJO.IssueCountWrapper">
+        select (select count(id)
+                from issue
+                where owner = #{owner}
+                  and repo = #{repo}
+                  and last_updated in (select last_updated from repo where owner = #{owner} and repo = #{repo})
+                  and closed_at is null
+               )                                                                                 open_cnt,
+               (select count(id)
+                from issue
+                where owner = #{owner}
+                  and repo = #{repo}
+                  and last_updated in (select last_updated from repo where owner = #{owner} and repo = #{repo})
+                  and closed_at is not null
+               )                                                                                 closed_cnt,
+               (select count(id)
+                from issue
+                where owner = #{owner}
+                  and repo = #{repo}
+                  and last_updated in
+                      (select last_updated from repo where owner = #{owner} and repo = #{repo})) total_cnt;
+    </select>
+
+    <select id="getOpenIssueTimes" resultType="java.lang.Long">
+        (select created_at open
+         from issue
+         where owner = #{owner}
+           and repo = #{repo}
+           and last_updated in (select last_updated from repo where owner = #{owner} and repo = #{repo})
+           and closed_at is null
+           and #{to} > created_at
+           and created_at > #{from}
+        );
+    </select>
+
+
+    <select id="getCloseIssueTimes" resultType="java.lang.Long">
+        (select created_at closed
+         from issue
+         where owner = #{owner}
+           and repo = #{repo}
+           and last_updated in (select last_updated from repo where owner = #{owner} and repo = #{repo})
+           and closed_at is not null
+           and #{to} > created_at
+           and created_at > #{from}
+        );
+    </select>
+
+    <select id="getTotalIssueTimes" resultType="java.lang.Long">
+        (select created_at time_cost
+         from issue
+         where owner = #{owner}
+           and repo = #{repo}
+           and last_updated in (select last_updated from repo where owner = #{owner} and repo = #{repo})
+           and #{to} > created_at
+           and created_at > #{from}
+        );
+    </select>
+
+    <select id="getSolutionTimes" resultType="java.lang.Long">
+        (select (closed_at - created_at) time_cost
+         from issue
+         where owner = #{owner}
+           and repo = #{repo}
+           and last_updated in (select last_updated from repo where owner = #{owner} and repo = #{repo})
+           and closed_at is not null
+        );
+    </select>
+    <select id="getOpenCount" resultType="java.lang.Integer">
+        select count(id)
+        from issue
+        where owner = #{owner}
+          and repo = #{repo}
+          and closed_at is null
+          and #{to} > created_at
+    </select>
+
+    <select id="getClosedCount" resultType="java.lang.Integer">
+        select count(id)
+        from issue
+        where owner = #{owner}
+          and repo = #{repo}
+          and closed_at is not null
+          and #{to} > created_at
+    </select>
+
+    <select id="getTotalCount" resultType="java.lang.Integer">
+        select count(id)
+        from issue
+        where owner = #{owner}
+          and repo = #{repo}
+          and #{to} > created_at
+    </select>
+
+
+</mapper>
