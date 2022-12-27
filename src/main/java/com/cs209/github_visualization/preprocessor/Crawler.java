@@ -153,6 +153,7 @@ public class Crawler {
         for (int task : taskList) {
             for (String repoStr : repoStrList) {
                 downloadAll(repoStr, task, null);
+
             }
         }
     }
