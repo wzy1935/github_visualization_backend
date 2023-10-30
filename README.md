@@ -5,7 +5,7 @@
 
 This repository hosts the backend code (the frontend is already embedded). It is a Springboot application.
 
-Frontend code at: 
+Frontend code at: https://github.com/wzy1935/github_visualization_frontend
 
 
 
