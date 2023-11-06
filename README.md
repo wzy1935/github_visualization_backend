@@ -1,7 +1,7 @@
 # GitHub Visualization (Backend)
 
 
-![Word cloud generated from Github Visualization](https://githubvisualizationdeploy-production.up.railway.app/api/repo/freeCodeCamp/freeCodeCamp/issues/wordcloud_pic/200/1000/200)
+![Word cloud generated from Github Visualization](https://githubvisualization.up.railway.app/api/repo/freeCodeCamp/freeCodeCamp/issues/wordcloud_pic/200/1000/200)
 
 This repository hosts the backend code (the frontend is already embedded). It is a Springboot application.
 
